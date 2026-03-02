@@ -1,0 +1,64 @@
+%------------------------------------------------------------
+% Fichier : test.tex
+% Objet  : Bac à sable LaTeX (maths)
+% Auteur : Raphaël Barret
+% Date   : 2026-02-28
+%------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+% Encodage / langue
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc} % utile si compilation pdflatex
+\usepackage[french]{babel}
+
+% Maths
+\usepackage{amsmath, amssymb, amsfonts, mathtools}
+\usepackage{physics} % \dv, \pdv, \norm, \abs, etc. (optionnel mais pratique)
+
+% Mise en page / confort
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+
+% Hyperliens
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue,
+  citecolor=blue
+}
+
+% Environnements théorèmes (optionnel)
+\usepackage{amsthm}
+\newtheorem{theorem}{Théorème}
+\newtheorem{lemma}{Lemme}
+\theoremstyle{definition}
+\newtheorem{definition}{Définition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remarque}
+
+%------------------------------------------------------------
+\title{Bac à sable LaTeX — Tests de maths}
+\author{Raphaël Barret}
+\date{\today}
+%------------------------------------------------------------
+
+\begin{document}
+\maketitle
+
+\begin{align}
+
+(\hat{u},\hat{v}) 
+&= \arg\min_{u,v \in \mathbb{R}^{N}} 
+\frac{1}{2}\|u+v-z\|_{2}^{2} \\[6pt]
+\hat{u} 
+&= \arg\min_{u \in \mathbb{R}^{N}} 
+\frac{1}{2}\|u+v-z\|_{2}^{2}\\
+
+\end{align}
+
+
+
+
+\end{document}

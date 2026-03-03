@@ -6,7 +6,7 @@ def animate_equation_gallery(
     back_formulas: list[str] = None,
     *,
     font_size: int = 64,          # taille initiale (grosse)
-    final_font_size: int = 36,     # taille cible si on ne scale pas auto
+    final_font_size: int = 16,     # taille cible si on ne scale pas auto
     vbuff: float = 0.25,
     margin: float = 0.4,          # marge écran
     use_align_env: bool = False,  # si tu mets des & / \\ dans tes formules
@@ -44,10 +44,10 @@ def animate_equation_gallery(
             return MathTex(s, font_size=final_font_size, tex_environment="align*")
         return MathTex(s, font_size=final_font_size)
 
-    visible_eqs = Group(*[_mt_final(s) for s in visible_formulas]).arrange(DOWN, buff=vbuff, aligned_edge=LEFT)
+    visible_eqs = Group(*[_mt_final(s) for s in visible_formulas]).arrange(DOWN, aligned_edge=LEFT)
     if back_formulas != None:
-        back_eqs = Group(*[_mt_final(s) for s in back_formulas]).arrange(DOWN, buff=vbuff, aligned_edge=LEFT)
-        eqs = Group(visible_eqs,back_eqs).arrange(RIGHT,buff=vbuff*2,aligned_edge=UP)
+        back_eqs = Group(*[_mt_final(s) for s in back_formulas]).arrange(DOWN, buff=vbuff)
+        eqs = Group(visible_eqs,back_eqs).arrange(RIGHT,buff=.1)
     else:
         eqs = visible_eqs
     # Placement : centré, puis auto-fit dans la fenêtre
@@ -68,6 +68,7 @@ def animate_equation_gallery(
     # 4) Transition finale : l’équation courante devient la galerie
     #    (très joli : la dernière formule "se transforme" en liste complète)
     scene.play(TransformMatchingTex(current, eqs))
+    
     return eqs
 
 class Etudetheorique:
@@ -103,6 +104,36 @@ class Etudetheorique:
         self.scene.wait(1)
         self.scene.play(FadeOut(*gallery))
 
+    def julesprime(self):
+        visibleformulas = [
+            r"(\hat u,\hat v)=\arg\min_{\hat u,\hat v\in\mathbb{R}^N} {{\frac{1}{2}\|u+v-z\|_2^2}} + {{\frac{\lambda}{2}\|Su\|_2^2}} + {{\mu\|Dv\|_1}}",
+            r"\hat v=\arg\min_{v\in\mathbb{R}^N} {{\frac{1}{2}\|u+v-z\|_2^2}} + {{\mu\|Dv\|_1}}",
+            r"\hat q=\arg\min_{q\in\mathbb{R}^N} {{f^*(-D^T q)}} + {{g^*(q)}}",
+            r"f^*(\cdot)={{\frac{1}{2}\|\cdot+(z-u)\|_2^2}}-{{\frac{1}{2}\|z-u\|_2^2}}",
+            r"\nabla f^*(\cdot)={{\cdot}}+{{z-u}}",
+            r"\hat q=\arg\min_{q\in\mathbb{R}^N} {{\frac{1}{2}\|-D^T q+(z-u)\|_2^2}} - {{\frac{1}{2}\|z-u\|_2^2}} + {{\iota_{\|q\|_\infty\le\mu}}}",
+            r"\hat q=\arg\min_{q\in\mathbb{R}^N} {{\frac{1}{2}\|-D^T q+(z-u)\|_2^2}} + {{\iota_{\|q\|_\infty\le\mu}}}",
+            r"F(q)={{\frac{1}{2}\|-D^T q+(z-u)\|_2^2}}",
+            r"\nabla F(q)={{-D^T(-D^T q+(z-u))}}",
+            r"\nabla F(q)={{D^T(D^T q+(u-z))}}",
+            r"q_{k+1}={{\operatorname{prox}_{\gamma G}}}\left({{q_k}}-{{\gamma\nabla F(q_k)}}\right)",
+            r"q_{k+1}={{q_k}}-{{\gamma\nabla F(q_k)}}-{{\gamma\operatorname{prox}_{\frac{\mu}{\gamma}\|\cdot\|_1}}}\left({{\frac{q_k}{\gamma}}}-{{\nabla F(q_k)}}\right)",
+
+        ]
+
+        back_formulas = [
+        r"f^*(\cdot)={{\frac{1}{2}\|\cdot+(z-u)\|_2^2}}-{{\frac{1}{2}\|z-u\|_2^2}}",
+        r"\nabla f^*(\cdot)={{\cdot}}+{{z-u}}",
+        r"F(q)={{\frac{1}{2}\|-D^T q+(z-u)\|_2^2}}",
+        r"\nabla F(q)={{D^T(D^T q+(u-z))}}",
+
+        ]
+
+        gallery = animate_equation_gallery(self.scene, visibleformulas,back_formulas,font_size=50)
+        self.scene.wait(1)
+        self.scene.play(FadeOut(*gallery))
+
+
     def play(self):
-        self.test()
-        self.primal1()
+        #self.test()
+        self.julesprime()

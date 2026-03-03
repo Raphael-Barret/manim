@@ -69,7 +69,6 @@ class ModelTV(ThreeDScene):
 
         # self.title("{{Modèle}} {{T}}otal {{V}}ariation",
         #            "Modèle {{T}}{{V}}")
-        # self.partie1()
         # self.play(FadeOut(*self.mobjects))
 
         # Descentegradient(self).play()
@@ -78,12 +77,12 @@ class ModelTV(ThreeDScene):
         # Descentegradient3D(self).play()
         # self.play(FadeOut(*self.mobjects))
 
-        # self.title("Etude {{Théori}}qu{{e}}","{{Théori}}{{e}}")
-        # Etudetheorique(self).play()
+        self.title("Etude {{Théori}}qu{{e}}","{{Théori}}{{e}}")
+        Etudetheorique(self).play()
         
 
-        self.title("Affichage et analyse des {{Résultats}}","{{Résultats}}")
-        Results(self).play()
+        # self.title("Affichage et analyse des {{Résultats}}","{{Résultats}}")
+        # Results(self).play()
         # self.play(FadeOut(*self.mobjects))
         
 

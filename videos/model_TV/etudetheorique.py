@@ -104,6 +104,7 @@ def animate_equation_gallery(
     vbuff: float = 0.25,
     margin: float = 0.4,          # marge écran
     use_align_env: bool = False,  # si tu mets des & / \\ dans tes formules
+    align = LEFT,
 ) -> Group:
     """
     Affiche une formule, puis la fait évoluer avec TransformMatchingTex
@@ -130,6 +131,7 @@ def animate_equation_gallery(
         nxt = _mt(s)
         scene.play(TransformMatchingTex(current, nxt,run_time=1))
         current = nxt
+        scene.wait(.5)
 
     # 3) Construire la galerie finale (toutes les équations en colonne)
     #    On les construit avec une taille "raisonnable", puis on auto-scale.
@@ -138,7 +140,7 @@ def animate_equation_gallery(
             return MathTex(s, font_size=final_font_size, tex_environment="align*")
         return MathTex(s, font_size=final_font_size)
 
-    visible_eqs = Group(*[_mt_final(s) for s in visible_formulas]).arrange(DOWN, aligned_edge=LEFT)
+    visible_eqs = Group(*[_mt_final(s) for s in visible_formulas]).arrange(DOWN, aligned_edge=align)
     if back_formulas != None:
         back_eqs = Group(*[_mt_final(s) for s in back_formulas]).arrange(DOWN, buff=vbuff)
         eqs = Group(visible_eqs,back_eqs).arrange(RIGHT,buff=.1)
@@ -168,6 +170,14 @@ def animate_equation_gallery(
 class Etudetheorique:
     def __init__(self,scene:Scene):
         self.scene = scene
+    
+    def sous_titre(self,soustitre:Text):
+        self.scene.play(
+            Write(soustitre),
+            soustitre.animate.scale(0.5).to_edge(UP),
+            run_time=.5
+        )
+        return soustitre
     
     def test(self):
         formulas = [
@@ -199,6 +209,8 @@ class Etudetheorique:
         self.scene.play(FadeOut(*gallery))
 
     def resolution(self):
+        st = self.sous_titre(Text("Résolution"))
+        
         visibleformulas = [
             r"(\hat u,\hat v)=\arg\min_{\hat u,\hat v\in\mathbb{R}^N} {{\frac{1}{2}\|u+v-z\|_2^2}} + {{\frac{\lambda}{2}\|Su\|_2^2}} + {{\mu\|Dv\|_1}}",
             r"\hat v=\arg\min_{v\in\mathbb{R}^N} {{\frac{1}{2}\|u+v-z\|_2^2}} + {{\mu\|Dv\|_1}}",
@@ -221,24 +233,30 @@ class Etudetheorique:
 
         gallery = animate_equation_gallery(self.scene, visibleformulas,back_formulas,font_size=50,final_font_size=25)
         self.scene.wait(1)
-        self.scene.play(FadeOut(*gallery))
+        self.scene.play(FadeOut(*gallery),FadeOut(st))
     
     def algorithme(self):
+        st = self.sous_titre(Text("Algorithme"))
         visibleformulas = [
+            r"\qquad p_{k+1}={{p_k}}-{{\gamma_{1}\nabla F_{1}(p_k)}}-{{\gamma_{1}\operatorname{prox}_{\frac{\lambda}{\gamma_{1}}\|\cdot\|_2}}}\left({{\frac{p_k}{\gamma_{1}}}}-{{\nabla F_{1}(p_k)}}\right)",
+            r"\qquad q_{k+1}={{q_k}}-{{\gamma_{2}\nabla F_{2}(q_k)}}-{{\gamma_{2}\operatorname{prox}_{\frac{\mu}{\gamma_{2}}\|\cdot\|_1}}}\left({{\frac{q_k}{\gamma_{2}}}}-{{\nabla F_{2}(q_k)}}\right)",
             
-            r"p_{k+1}={{p_k}}-{{\gamma_{1}\nabla F_{1}(q_k)}}-{{\gamma_{1}\operatorname{prox}_{\frac{\mu}{\gamma_{1}}\|\cdot\|_2}}}\left({{\frac{q_k}{\gamma_{1}}}}-{{\nabla F_{1}(q_k)}}\right)",
-            r"q_{k+1}={{q_k}}-{{\gamma_{2}\nabla F_{2}(q_k)}}-{{\gamma_{2}\operatorname{prox}_{\frac{\mu}{\gamma_{2}}\|\cdot\|_1}}}\left({{\frac{q_k}{\gamma_{2}}}}-{{\nabla F_{2}(q_k)}}\right)",
-            r"for(n : Niter)"
-            r"u = -S^{T}p",
-            r"v = -D^{T}q",
+            r"  u = -S^{T}p",
+            r"  v = -D^{T}q",
         ]
 
         back_formulas = []
+
         gallery = animate_equation_gallery(self.scene, visibleformulas,back_formulas,font_size=50)
+        boucle_for = MathTex(r"for(k : Niter):").to_edge(LEFT)
+        boucle_for.next_to(gallery,UP).scale(.7).shift(LEFT*4)
+        self.scene.play(FadeIn(boucle_for))
         self.scene.wait(1)
-        self.scene.play(FadeOut(*gallery))
+        self.scene.play(FadeOut(*gallery),FadeOut(st),FadeOut(boucle_for))
     
-    def op_prox(self):
+    def conjugue(self):
+        st = self.sous_titre(Text("Fonctions conjuguées"))
+
         visibleformulas2 = [
             r"\min_{ {{x\in\mathbb{R}^N}} } \, {{f(x)}} + {{g(\Gamma x)}}",
             r"\min_{ {{u\in\mathbb{R}^M}} } \, {{f^{*}(-\Gamma^{\top} u)}} + {{g^{*}(u)}}",
@@ -257,12 +275,24 @@ class Etudetheorique:
         gallery = animate_equation_gallery(self.scene, visibleformulas1,back_formulas,font_size=50)
         self.scene.wait(1)
         self.scene.play(FadeOut(*gallery))
+        self.scene.play(FadeOut(*gallery),FadeOut(st))
+        st = self.sous_titre(Text("Passage au dual"))
         gallery = animate_equation_gallery(self.scene, visibleformulas2,back_formulas,font_size=50)
-        self.scene.play(FadeOut(*gallery))
+        self.scene.play(FadeOut(*gallery),FadeOut(st))
 
+
+    def op_prox(self):
+        st = self.sous_titre(Text("Opérateur proximal"))
+        vf = [
+            r"prox_{\gamma f}(x)=\arg\min_{y\in\mathbb{R}^n}\left(f(y)+\frac{1}{2\gamma}\|y-x\|_2^2\right)"
+        ]
+        gallery = animate_equation_gallery(self.scene, vf,[],font_size=50)
+        self.scene.wait(1)
+        self.scene.play(FadeOut(*gallery),FadeOut(st))
 
 
     def play(self):
+        self.conjugue()
         self.op_prox()
         self.resolution()
         self.algorithme()

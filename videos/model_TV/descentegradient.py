@@ -16,7 +16,7 @@ class Descentegradient:
 
         labels = axes.get_axis_labels(MathTex("x"), MathTex("y"))
 
-        parabola = axes.plot(lambda x: x**2, x_range=[-3.2, 3.2], use_smoothing=True)
+        parabola = axes.plot(lambda x: x**2, x_range=[-3.2, 3.2], use_smoothing=True,color=BLUE)
         parabola_label = MathTex("f(x)=x^2").scale(0.8).next_to(parabola, UR)
 
         self.scene.play(Create(axes), Write(labels))
@@ -33,7 +33,7 @@ class Descentegradient:
         )
 
         # --- Règle de descente de gradient affichée ---
-        rule = MathTex(r"x \leftarrow x - \lambda \,\nabla f(x)").to_corner(UL)
+        rule = MathTex(r"x \leftarrow x - \lambda \,\nabla f(x)").to_edge(LEFT)
         self.scene.play(FadeIn(dot, scale=0.8), Write(dot_label), Write(rule))
 
         # --- Paramètre lambda (step size) ---

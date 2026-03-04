@@ -119,6 +119,7 @@ def make_image_gallery(
     label_scale: float = 0.40,
     col_buff: float = 0.8,
     row_buff: float = 0.4,
+
 ) -> tuple[Group, dict]:
     """
     Retourne (gallery, bottom_graph_parts)
@@ -163,5 +164,6 @@ def make_image_gallery(
     gallery = Group(top_row, bottom_panel).arrange(DOWN, buff=row_buff)
     bottom_panel.align_to(top_row, ORIGIN)
     gallery.move_to(ORIGIN)
+
 
     return gallery, bottom_parts

@@ -14,6 +14,7 @@ from etudetheorique import Etudetheorique
 class ModelTV(ThreeDScene):
     def title(self, str_title:str, str_title2:str=None):
         title = Tex(str_title).scale(1.5)
+        
         self.play(Write(title))
         self.wait(1)
         if str_title2 != None:
@@ -21,6 +22,7 @@ class ModelTV(ThreeDScene):
             self.play(TransformMatchingTex(title,title2))
         else:
             title2 = title
+        self.add_fixed_in_frame_mobjects(title2)
         self.play(
             title2.animate.scale(0.5).to_corner(UL),
             run_time=1.5,
@@ -65,24 +67,51 @@ class ModelTV(ThreeDScene):
 
         self.title("Introduction")
         Introduction(self).play()
+        self.play(FadeOut(*self.mobjects)) #Jules
+        
+        self.title("Méthode de {{Descente de gradient}}","{{Descente de gradient}}")
+        Descentegradient(self).play()
+        self.play(FadeOut(*self.mobjects)) #Raph
+
+        self.title("{{Descente de gradient}}","{{Descente de gradient}} {{3D}}")
+        Descentegradient3D(self).play()
+        self.play(FadeOut(*self.mobjects)) #Jules
+
+        self.set_camera_orientation(phi = 0*DEGREES, theta=-90*DEGREES)
+        self.title("Etude {{Théori}}qu{{e}}","{{Théori}}{{e}}")
+        Etudetheorique(self).play()
+        self.play(FadeOut(*self.mobjects))
+
+        self.title("Affichage et analyse des {{Résultats}}","{{Résultats}}")
+        Results(self).play()
+        self.play(FadeOut(*self.mobjects))
+
+
+        self.title("Comparaison des méthodes")
+        Results(self).play2()
         self.play(FadeOut(*self.mobjects))
 
 
 
-        # Descentegradient(self).play()
-        # self.play(FadeOut(*self.mobjects))
+        self.play(Write(MathTex(
+            r"(\hat u,\hat v)=\arg\min_{\hat u,\hat v\in\mathbb{R}^N} {{\frac{1}{2}\|u+v-z\|_2^2}} + {{\frac{\lambda}{2}\|Su\|_2^2}} + {{\mu\|Dv\|_1}}",
+        )))
+        self.wait(2)
+        self.play(FadeOut(*self.mobjects))
+        group = Group(
+            Tex("By"),
+            Tex("Raphaël Barret"),
+            Tex("and"),
+            Tex("Jules Grivot Pélisson"),
+        ).arrange(DOWN).move_to(ORIGIN)
 
-        # Descentegradient3D(self).play()
-        # self.play(FadeOut(*self.mobjects))
+        self.play(*[Write(m) for m in group])
+        self.wait(2)
 
-        # self.title("Etude {{Théori}}qu{{e}}","{{Théori}}{{e}}")
-        # Etudetheorique(self).play()
-        
-
-        # self.title("Affichage et analyse des {{Résultats}}","{{Résultats}}")
-        # Results(self).play()
-        # self.play(FadeOut(*self.mobjects))
-        
+        self.play(FadeOut(*self.mobjects))
+        self.play(Write(Tex("Merci de votre attention")))
+        self.play(FadeOut(*self.mobjects))
+        self.play(Write(Text("Passons aux questions ?")))
 
 
 

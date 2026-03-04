@@ -67,7 +67,7 @@ class Descentegradient3D:
             rule = MathTex(
                 r"\begin{pmatrix}u\\v\end{pmatrix}\leftarrow"
                 r"\begin{pmatrix}u\\v\end{pmatrix}-\lambda\,\nabla f(u,v)"
-            ).to_corner(UL)
+            ).to_edge(LEFT)
 
             lam = 0.25
             lam_text = MathTex(r"\lambda =", f"{lam}").scale(0.8).next_to(rule, DOWN, aligned_edge=LEFT)
